@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zii's Delight Bakery</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="slideshow.js"></script>
+</head>
+<body>
+  <header>
+    <img src="images/logo.jpg" alt="Zii's Delight Logo" class="logo">
+    <h1>Home</h1>
+  
+    <div class="nav-container">
+      <button id="nav-toggle">☰ Menu</button>
+      <nav id="nav-menu">
+        <a href="index.html">Home</a>
+        <a href="menu.html">Menu</a>
+        <a href="order.html">Order</a>
+        <a href="signup.html">Account</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div id="review-slideshow">
+      <img id="reviewImage" src="" alt="Review Slide" style="width:100%; display:block;">
+      <div class="button-group">
+        <button id="reviewPrevBtn">Previous</button>
+        <button id="reviewPauseBtn">Pause</button>
+        <button id="reviewNextBtn">Next</button>
+      </div>
+      <p class="slideshow-text">Swipe or click button to see more</p>
+    </div>
+  </main>
+  <script>
+    const toggleBtn = document.getElementById('nav-toggle');
+    const navMenu = document.getElementById('nav-menu');
+  
+    toggleBtn.addEventListener('click', () => {
+      navMenu.classList.toggle('show');
+    });
+  </script>
+  
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="reviewcreate.js"></script>
+</head>
+<body>
+    <header>
+        <img src="images/logo.jpg" alt="Zii's Delight Logo" class="logo">
+        <h1>Home</h1>
+      
+        <div class="nav-container">
+          <button id="nav-toggle">☰ Menu</button>
+          <nav id="nav-menu">
+            <a href="index.html">Home</a>
+            <a href="menu.html">Menu</a>
+            <a href="order.html">Order</a>
+            <a href="signup.html">Account</a>
+            <a href="contact.html">Contact</a>
+          </nav>
+        </div>
+      </header>
+    <main>
+        <br>
+        <p>📍 Location: St. James, Bridgetown, Barbados</p>
+        <p>📞 Phone: 843 - 2725</p>
+        <p><a href="https://www.instagram.com/ziis_delights/">❤ Instagram: ziis_delights</a></p>
+        <br>
+        <p>Add a review Please:</p>
+        <form id="review-form">
+            <input type="text" id="review-name" placeholder="Your name" required>
+            <textarea id="review-text" placeholder="Your review" required></textarea>
+            <button type="submit">Submit Review</button>
+            <canvas id="reviewCanvas" width="400" height="200" style="display:none;"></canvas>
+          </form>
+    </main>
+    <script>
+        const toggleBtn = document.getElementById('nav-toggle');
+        const navMenu = document.getElementById('nav-menu');
+      
+        toggleBtn.addEventListener('click', () => {
+          navMenu.classList.toggle('show');
+        });
+      </script>
+      
+</body>
+</html>

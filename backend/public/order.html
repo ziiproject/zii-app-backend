@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Menu</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="order.js"></script>
+</head>
+<body>
+  <header>
+    <img src="images/logo.jpg" alt="Zii's Delight Logo" class="logo">
+    <h1>Home</h1>
+  
+    <div class="nav-container">
+      <button id="nav-toggle">☰ Menu</button>
+      <nav id="nav-menu">
+        <a href="index.html">Home</a>
+        <a href="menu.html">Menu</a>
+        <a href="order.html">Order</a>
+        <a href="signup.html">Account</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="product-list">
+      <div class="product" data-name="mini Cupcake" data-price="21.00">
+        <img src="images/minicupcakes.jpg" alt="minicupcakes">
+        <h3>Mini Cupcakes</h3>
+        <input type="number" value="1" min="1" class="quantity">
+        <button class="add-to-cart">Add to Cart</button>
+      </div>
+
+      <div class="product" data-name="chocochipcookies" data-price="18.00">
+        <img src="images/cookies.jpg" alt="cookies">
+        <h3>Six Chocolate chip Cookies</h3>
+        <input type="number" value="1" min="1" class="quantity">
+        <button class="add-to-cart">Add to Cart</button>
+      </div>
+
+      <div class="product" data-name="cinnamonrolls" data-price="22.50">
+        <img src="images/cinnamonrolls.jpg" alt="cinnamonrolls">
+        <h3>Cinnamon Rolls</h3>
+        <input type="number" value="1" min="1" class="quantity">
+        <button class="add-to-cart">Add to Cart</button>
+      </div>
+
+      <div class="product" data-name="brownie" data-price="18.00">
+        <img src="images/brownie.jpg" alt="brownie">
+        <h3> Fudge Brownies</h3>
+        <input type="number" value="1" min="1" class="quantity">
+        <button class="add-to-cart">Add to Cart</button>
+      </div>
+
+      <div class="product" data-name="wholecake" data-price="32.00">
+        <img src="images/wholecake.png" alt="wholecake">
+        <h3> Whole Cake</h3>
+        <input type="number" value="1" min="1" class="quantity">
+        <button class="add-to-cart">Add to Cart</button>
+      </div>
+
+      <div class="product" data-name="muffin" data-price="15.00">
+        <img src="images/muffin.png"alt="muffin">
+        <h3> Muffins</h3>
+        <input type="number" value="1" min="1" class="quantity">
+        <button class="add-to-cart">Add to Cart</button>
+      </div>
+
+      <div class="product" data-name="sugarcookies" data-price="20.00">
+        <img src="images/sugarcookies.png" alt="sugarcookies">
+        <h3> Sugar Cookies</h3>
+        <input type="number" value="1" min="1" class="quantity">
+        <button class="add-to-cart">Add to Cart</button>
+      </div>
+
+    </section>
+ <section class="cart">
+      <h2>Your Cart</h2>
+      <ul id="cart-items"></ul>
+      <p><strong>Total: $<span id="cart-total">0</span></strong></p>
+      <p style="color:#d43; margin-bottom:1em;">
+        Please contact us if you have any allergies!
+      </p>
+      <input type="email" id="cart-email" placeholder="Your email" required>
+      <button id="checkout-btn">Checkout</button>
+    </section>
+  </main>
+  <script>
+    const toggleBtn = document.getElementById('nav-toggle');
+    const navMenu = document.getElementById('nav-menu');
+  
+    toggleBtn.addEventListener('click', () => {
+      navMenu.classList.toggle('show');
+    });
+  </script>
+  
+</body>
+</html>
