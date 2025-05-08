@@ -10,6 +10,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import pool from './database.js';
+pool.query('SELECT NOW()')
+  .then(() => console.log("✅ Connected to PostgreSQL"))
+  .catch(err => console.error("❌ DB Connection Error:", err.message));
 import orderRoutes from './order.js';
 
 const app = express();
