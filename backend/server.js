@@ -10,6 +10,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import pool from './database.js';
+pool.connect()
+  .then(() => console.log("✅ Connected to PostgreSQL"))
+  .catch(err => console.error("❌ DB Connection Error:", err.message));
 pool.query('SELECT NOW()')
   .then(() => console.log("✅ Connected to PostgreSQL"))
   .catch(err => console.error("❌ DB Connection Error:", err.message));
