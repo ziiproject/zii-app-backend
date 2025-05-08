@@ -1,4 +1,4 @@
-// server.js
+
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
@@ -11,11 +11,24 @@ dotenv.config();
 
 import pool from './database.js';
 pool.connect()
-  .then(() => console.log("✅ Connected to PostgreSQL"))
-  .catch(err => console.error("❌ DB Connection Error:", err.message));
+  .then(() => console.log("Connected to PostgreSQL"))
+  .catch(err => console.error("DB Connection Error:", err.message));
+
 pool.query('SELECT NOW()')
-  .then(() => console.log("✅ Connected to PostgreSQL"))
-  .catch(err => console.error("❌ DB Connection Error:", err.message));
+  .then(() => console.log("Connected to PostgreSQL"))
+  .catch(err => console.error("DB Connection Error:", err.message));
+
+pool.query(`
+  CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    firstname VARCHAR(100),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL
+  )
+`)
+  .then(() => console.log("'users' table is ready"))
+  .catch(err => console.error("Error creating 'users' table:", err.message));
+
 import orderRoutes from './order.js';
 
 const app = express();
