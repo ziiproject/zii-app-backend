@@ -1,22 +1,31 @@
-CREATE DATABASE zii_appcart;
-USE zii_appcart;
 
 CREATE TABLE users (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  firstname VARCHAR(255),
-  email VARCHAR(255) UNIQUE,
-  password VARCHAR(255)
+  id SERIAL PRIMARY KEY,
+  firstname TEXT,
+  email TEXT UNIQUE,
+  password TEXT
 );
+
+
 CREATE TABLE orders (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  email VARCHAR(255),
-  item VARCHAR(255),
-  quantity INT,
-  price DECIMAL(10,2),
+  id SERIAL PRIMARY KEY,
+  email TEXT,
+  item TEXT,
+  quantity INTEGER,
+  price NUMERIC(10, 2),
   order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+
 CREATE TABLE review_images (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  path VARCHAR(255) NOT NULL,
+  id SERIAL PRIMARY KEY,
+  path TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE ingredients (
+  id SERIAL PRIMARY KEY,
+  name TEXT UNIQUE NOT NULL,
+  quantity NUMERIC NOT NULL,
+  unit TEXT DEFAULT 'unit'    
 );

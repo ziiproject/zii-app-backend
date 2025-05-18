@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <meta charset="UTF-8" />
+  <title>Admin - Ingredient Manager</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="admin.js"></script> 
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #fff5f2;
+      padding: 30px;
+      margin: 0;
+      text-align: center;
+    }
+
+    .logo {
+      width: 150px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      color: #d96b5d;
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+
+    form {
+      background-color: #ffe6e0;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      display: inline-block;
+      margin-bottom: 30px;
+    }
+
+    input {
+      padding: 10px;
+      margin: 10px 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      width: 180px;
+    }
+
+    button {
+      background-color: #ff928b;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #d96b5d;
+    }
+
+    h2 {
+      margin-top: 30px;
+      color: #ff715b;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      max-width: 400px;
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    li {
+      background-color: #fff;
+      border-left: 5px solid #ffa08c;
+      margin-bottom: 10px;
+      padding: 12px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+  </style>
+</head>
+<body>
+  <img src="images/logo.png" alt="Zii's Delight Logo" class="logo" />
+
+  <h1>Ingredient Manager</h1>
+
+  <form id="ingredient-form">
+    <input type="text" id="name" placeholder="Ingredient name" required />
+    <input type="text" id="quantity" placeholder="Quantity" required />
+    <input type="text" id="unit" placeholder="Unit (e.g., kg, L)" />
+    <button type="submit">Add / Update</button>
+  </form>
+
+  <h2>Current Ingredients</h2>
+  <ul id="ingredient-list"></ul>
+</body>
+</html>

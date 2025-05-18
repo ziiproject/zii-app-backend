@@ -1,4 +1,3 @@
-
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
@@ -14,20 +13,55 @@ pool.connect()
   .then(() => console.log("Connected to PostgreSQL"))
   .catch(err => console.error("DB Connection Error:", err.message));
 
-pool.query('SELECT NOW()')
-  .then(() => console.log("Connected to PostgreSQL"))
-  .catch(err => console.error("DB Connection Error:", err.message));
 
-pool.query(`
-  CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
-    firstname VARCHAR(100),
-    email VARCHAR(255) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL
-  )
-`)
-  .then(() => console.log("'users' table is ready"))
-  .catch(err => console.error("Error creating 'users' table:", err.message));
+const initTables = async () => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        firstname VARCHAR(100),
+        email VARCHAR(255) UNIQUE NOT NULL,
+        password VARCHAR(255) NOT NULL
+      );
+    `);
+    console.log("'users' table is ready");
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS orders (
+        id SERIAL PRIMARY KEY,
+        email VARCHAR(255),
+        item VARCHAR(255),
+        quantity INT,
+        price DECIMAL(10, 2),
+        order_date TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    console.log("'orders' table is ready");
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS review_images (
+        id SERIAL PRIMARY KEY,
+        path VARCHAR(255) NOT NULL,
+        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    console.log("'review_images' table is ready");
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS ingredients (
+        id SERIAL PRIMARY KEY,
+        name TEXT NOT NULL,
+        quantity NUMERIC(10, 2),
+        unit TEXT,
+        updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    console.log("'ingredients' table is ready");
+  } catch (err) {
+    console.error("Error initializing tables:", err.message);
+  }
+};
+initTables();
 
 import orderRoutes from './order.js';
 
@@ -36,13 +70,17 @@ const PORT = process.env.PORT || 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
 });
+
 
 app.post('/api/signup', async (req, res) => {
   const { firstname, email, password } = req.body;
@@ -62,6 +100,7 @@ app.post('/api/signup', async (req, res) => {
   }
 });
 
+
 app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -79,7 +118,9 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+
 app.use('/api', orderRoutes);
+
 
 app.post('/api/reviews-image', async (req, res) => {
   const { image } = req.body;
@@ -97,14 +138,6 @@ app.post('/api/reviews-image', async (req, res) => {
     const filePath = path.join(folder, filename);
     fs.writeFileSync(filePath, base64Data, 'base64');
 
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS review_images (
-        id SERIAL PRIMARY KEY,
-        path VARCHAR(255) NOT NULL,
-        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-
     await pool.query("INSERT INTO review_images (path) VALUES ($1)", [`images/reviews/${filename}`]);
 
     res.status(201).json({ message: "Image saved", path: filename });
@@ -112,6 +145,7 @@ app.post('/api/reviews-image', async (req, res) => {
     res.status(500).json({ message: "Error saving image", error: err.message });
   }
 });
+
 
 app.get('/api/review-images', async (req, res) => {
   try {
@@ -122,6 +156,60 @@ app.get('/api/review-images', async (req, res) => {
     res.status(500).json({ message: "Error retrieving images", error: err.message });
   }
 });
+
+
+app.get('/api/ingredients', async (req, res) => {
+  try {
+    const result = await pool.query("SELECT * FROM ingredients ORDER BY updated_at DESC");
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch ingredients", error: err.message });
+  }
+});
+
+
+app.post('/api/ingredients', async (req, res) => {
+  const { name, quantity, unit } = req.body;
+  if (!name) return res.status(400).json({ message: "Name is required" });
+
+  try {
+    await pool.query(
+      "INSERT INTO ingredients (name, quantity, unit) VALUES ($1, $2, $3)",
+      [name, quantity, unit]
+    );
+    res.status(201).json({ message: "Ingredient added" });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to add ingredient", error: err.message });
+  }
+});
+
+
+app.put('/api/ingredients/:id', async (req, res) => {
+  const { id } = req.params;
+  const { name, quantity, unit } = req.body;
+
+  try {
+    await pool.query(
+      `UPDATE ingredients SET name = $1, quantity = $2, unit = $3, updated_at = CURRENT_TIMESTAMP WHERE id = $4`,
+      [name, quantity, unit, id]
+    );
+    res.json({ message: "Ingredient updated" });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to update ingredient", error: err.message });
+  }
+});
+
+
+app.delete('/api/ingredients/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await pool.query("DELETE FROM ingredients WHERE id = $1", [id]);
+    res.json({ message: "Ingredient deleted" });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to delete ingredient", error: err.message });
+  }
+});
+
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
