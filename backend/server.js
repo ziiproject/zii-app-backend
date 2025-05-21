@@ -244,11 +244,13 @@ app.delete('/api/ingredients/:id', async (req, res) => {
 //delete later
 app.delete('/api/dev/clean-review-db', async (req, res) => {
   try {
-    const result = await pool.query('SELECT id, image_path FROM review_images');
+    const { rows } = await pool.query('SELECT id, path FROM review_images');
     const toDelete = [];
 
-    for (const row of result.rows) {
-      const localPath = path.join(__dirname, 'public', row.image_path);
+    for (const row of rows) {
+      const filename = row.image_url.split('/').pop(); // Get the image name
+      const localPath = path.join(__dirname, 'public', 'reviews', filename); // adjust folder if needed
+
       if (!fs.existsSync(localPath)) {
         toDelete.push(row.id);
       }
