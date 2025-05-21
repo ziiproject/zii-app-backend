@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", () => {
   const cart = [];
   const cartList = document.getElementById("cart-items");
@@ -9,9 +8,9 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".add-to-cart").forEach(btn => {
     btn.addEventListener("click", () => {
       const product = btn.closest(".product");
-      const name    = product.dataset.name;
-      const price   = parseFloat(product.dataset.price);
-      const quantity= parseInt(product.querySelector(".quantity").value, 10);
+      const name = product.dataset.name;
+      const price = parseFloat(product.dataset.price);
+      const quantity = parseInt(product.querySelector(".quantity").value, 10);
       cart.push({ name, price, quantity });
       renderCart();
     });
@@ -20,13 +19,27 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderCart() {
     cartList.innerHTML = "";
     let total = 0;
-    cart.forEach(item => {
+
+    cart.forEach((item, index) => {
       total += item.price * item.quantity;
+
       const li = document.createElement("li");
-      li.textContent = `${item.quantity} × ${item.name} — $${(item.price*item.quantity).toFixed(2)}`;
+      li.innerHTML = `
+        ${item.quantity} × ${item.name} — $${(item.price * item.quantity).toFixed(2)}
+        <button class="remove-item" data-index="${index}" style="margin-left:10px; color:#fff; background:#d43; border:none; border-radius:5px; cursor:pointer;">❌</button>
+      `;
       cartList.appendChild(li);
     });
+
     cartTotal.textContent = total.toFixed(2);
+
+    document.querySelectorAll(".remove-item").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const index = parseInt(btn.dataset.index, 10);
+        cart.splice(index, 1);
+        renderCart();
+      });
+    });
   }
 
   checkoutBtn.addEventListener("click", async () => {

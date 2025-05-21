@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  //  Review Slideshow 
+  
   const reviewImg = document.getElementById("reviewImage");
   if (reviewImg) {
     const reviewImages = [
@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   
-    // Menu Slideshow 
+   
     const menuImg = document.getElementById("menuImage");
   
     if (menuImg) {

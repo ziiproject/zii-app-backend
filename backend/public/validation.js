@@ -12,7 +12,7 @@ form.addEventListener('submit', async (e) => {
   const password = password_input.value;
 
   if (firstname_input) {
-    // Signup
+    
     const firstname = firstname_input.value;
     const repeatPassword = repeat_password_input.value;
     errors = getSignupFormErrors(firstname, email, password, repeatPassword);
@@ -33,7 +33,7 @@ form.addEventListener('submit', async (e) => {
       }
     }
   } else {
-    // Login
+   
     errors = getLoginFormErrors(email, password);
     if (errors.length === 0) {
       try {

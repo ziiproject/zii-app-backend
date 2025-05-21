@@ -1,4 +1,4 @@
-/* === Base Styles === */
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;900&display=swap');
 
 :root {
@@ -34,7 +34,7 @@ body {
   align-items: center;
 }
 
-/* === Header === */
+
 header {
   width: 100%;
   padding: 20px;
@@ -51,7 +51,7 @@ header {
   filter: drop-shadow(3px 3px 5px rgba(0, 0, 0, 0.3));
 }
 
-/* === Navigation === */
+
 .nav-container {
   position: absolute;
   top: 20px;
@@ -98,7 +98,7 @@ header {
   background-color: var(--btn-hover);
 }
 
-/* === Slideshow === */
+
 #review-slideshow, #menu-slideshow {
   position: relative;
   max-width: 600px;
@@ -129,7 +129,7 @@ header {
   gap: 10px;
 }
 
-/* === Buttons === */
+
 button {
   background-color: var(--btn-color);
   color: white;
@@ -145,7 +145,7 @@ button:hover {
   background-color: var(--btn-hover);
 }
 
-/* === Updated Product List for Order Page === */
+
 .product-list {
   display: flex;
   flex-wrap: wrap;
@@ -191,7 +191,7 @@ button:hover {
   border-radius: 5px;
 }
 
-/* === Cart Section Styling === */
+
 .cart {
   margin-top: 40px;
   padding: 20px;
@@ -241,7 +241,7 @@ button:hover {
   width: 100%;
 }
 
-/* === Forms (Login/Signup) === */
+
 .wrapper {
   background-color: var(--base-color);
   width: max(40%, 600px);

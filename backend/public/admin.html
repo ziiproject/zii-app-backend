@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
   <meta charset="UTF-8" />
-  <title>Admin - Ingredient Manager</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Admin - Dashboard</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="admin.js"></script> 
+  <script defer src="admin.js"></script>
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      background-color:  #f9bab1;
+      background-color: #f9bab1;
       padding: 30px;
       margin: 0;
       text-align: center;
@@ -20,9 +20,8 @@
       margin-bottom: 20px;
     }
 
-    h1 {
-      color: #000000;
-      font-size: 2em;
+    h1, h2 {
+      color: #000;
       margin-bottom: 20px;
     }
 
@@ -30,9 +29,8 @@
       background-color: #ffe6e0;
       padding: 20px;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin: 20px auto;
       display: inline-block;
-      margin-bottom: 30px;
     }
 
     input {
@@ -40,7 +38,7 @@
       margin: 10px 8px;
       border-radius: 8px;
       border: 1px solid #ccc;
-      width: 180px;
+      width: 160px;
     }
 
     button {
@@ -58,42 +56,80 @@
       background-color: #7200f5;
     }
 
-    h2 {
-      margin-top: 30px;
-      color: #592ef7;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-      max-width: 400px;
-      margin: 0 auto;
-      text-align: left;
-    }
-
-    li {
-      background-color: #fff;
-      border-left: 5px solid #ffa08c;
-      margin-bottom: 10px;
-      padding: 12px;
+    table {
+      margin: 20px auto;
+      width: 90%;
+      border-collapse: collapse;
+      background: white;
       border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #ffa08c;
+      color: #fff;
+    }
+
+    td button {
+      padding: 5px 10px;
+      margin: 0 2px;
+      font-size: 0.9em;
     }
   </style>
 </head>
 <body>
   <img src="images/logo.jpg" alt="Zii's Delight Logo" class="logo" />
-
-  <h1>Ingredient Manager</h1>
+  <h1>Admin Dashboard</h1>
 
   <form id="ingredient-form">
     <input type="text" id="name" placeholder="Ingredient name" required />
-    <input type="text" id="quantity" placeholder="Quantity" required />
+    <input type="number" id="quantity" placeholder="Quantity" required />
     <input type="text" id="unit" placeholder="Unit (e.g., kg, L)" />
     <button type="submit">Add / Update</button>
   </form>
 
-  <h2>Current Ingredients</h2>
-  <ul id="ingredient-list"></ul>
+  <h2>Ingredients</h2>
+  <table id="ingredient-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Quantity</th>
+        <th>Unit</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <h2>Users</h2>
+  <table id="user-table">
+    <thead>
+      <tr>
+        <th>User ID</th>
+        <th>Email</th>
+        <th>Created At</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <h2>Orders</h2>
+  <table id="order-table">
+    <thead>
+      <tr>
+        <th>Order ID</th>
+        <th>Email</th>
+        <th>Items</th>
+        <th>Created At</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 </body>
 </html>

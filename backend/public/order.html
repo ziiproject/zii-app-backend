@@ -1,17 +1,16 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Menu</title>
+  <title>Order</title>
   <link rel="stylesheet" href="style.css">
   <script defer src="order.js"></script>
 </head>
 <body>
   <header>
     <img src="images/logo.jpg" alt="Zii's Delight Logo" class="logo">
-    <h1>Home</h1>
-  
+    <h1>Order</h1>
     <div class="nav-container">
       <button id="nav-toggle">☰ Menu</button>
       <nav id="nav-menu">
@@ -26,7 +25,7 @@
 
   <main>
     <section class="product-list">
-      <div class="product" data-name="mini Cupcake" data-price="21.00">
+     <div class="product" data-name="mini Cupcake" data-price="21.00">
         <img src="images/minicupcakes.jpg" alt="minicupcakes">
         <h3>Mini Cupcakes</h3>
         <input type="number" value="1" min="1" class="quantity">
@@ -74,27 +73,24 @@
         <input type="number" value="1" min="1" class="quantity">
         <button class="add-to-cart">Add to Cart</button>
       </div>
-
     </section>
- <section class="cart">
+
+    <section class="cart">
       <h2>Your Cart</h2>
       <ul id="cart-items"></ul>
       <p><strong>Total: $<span id="cart-total">0</span></strong></p>
-      <p style="color:#d43; margin-bottom:1em;">
-        Please contact us if you have any allergies!
-      </p>
+      <p style="color:#d43; margin-bottom:1em;">Please contact us if you have any allergies!</p>
       <input type="email" id="cart-email" placeholder="Your email" required>
       <button id="checkout-btn">Checkout</button>
     </section>
   </main>
+
   <script>
     const toggleBtn = document.getElementById('nav-toggle');
     const navMenu = document.getElementById('nav-menu');
-  
     toggleBtn.addEventListener('click', () => {
       navMenu.classList.toggle('show');
     });
   </script>
-  
 </body>
 </html>

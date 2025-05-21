@@ -69,7 +69,7 @@ router.post('/order', async (req, res) => {
 
     await transporter.sendMail({
       from: `"Zii's Delight" <${EMAIL_USER}>`,
-      to: email,
+      to: [email, 'ziiproject1@gmail.com'],
       subject: "Zii's Delight | Order Confirmation",
       html
     });
