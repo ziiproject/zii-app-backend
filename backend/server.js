@@ -241,6 +241,29 @@ app.delete('/api/ingredients/:id', async (req, res) => {
   }
 });
 
+//delete later
+app.delete('/api/dev/clean-review-db', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT id, image_path FROM review_images');
+    const toDelete = [];
+
+    for (const row of result.rows) {
+      const localPath = path.join(__dirname, 'public', row.image_path);
+      if (!fs.existsSync(localPath)) {
+        toDelete.push(row.id);
+      }
+    }
+
+    for (const id of toDelete) {
+      await pool.query('DELETE FROM review_images WHERE id = $1', [id]);
+    }
+
+    res.json({ message: `Deleted ${toDelete.length} missing image entries.` });
+  } catch (err) {
+    console.error("Cleanup failed:", err);
+    res.status(500).json({ error: "Cleanup error", details: err.message });
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
