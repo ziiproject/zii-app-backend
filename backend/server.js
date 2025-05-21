@@ -13,7 +13,6 @@ pool.connect()
   .then(() => console.log("Connected to PostgreSQL"))
   .catch(err => console.error("DB Connection Error:", err.message));
 
-
 const initTables = async () => {
   try {
     await pool.query(`
@@ -24,8 +23,6 @@ const initTables = async () => {
         password VARCHAR(255) NOT NULL
       );
     `);
-    console.log("'users' table is ready");
-
     await pool.query(`
       CREATE TABLE IF NOT EXISTS orders (
         id SERIAL PRIMARY KEY,
@@ -36,8 +33,6 @@ const initTables = async () => {
         order_date TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
       );
     `);
-    console.log("'orders' table is ready");
-
     await pool.query(`
       CREATE TABLE IF NOT EXISTS review_images (
         id SERIAL PRIMARY KEY,
@@ -45,18 +40,16 @@ const initTables = async () => {
         created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
       );
     `);
-    console.log("'review_images' table is ready");
-
     await pool.query(`
       CREATE TABLE IF NOT EXISTS ingredients (
         id SERIAL PRIMARY KEY,
-        name TEXT NOT NULL,
+        name TEXT UNIQUE NOT NULL,
         quantity NUMERIC(10, 2),
         unit TEXT,
         updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
       );
     `);
-    console.log("'ingredients' table is ready");
+    console.log("All tables are ready");
   } catch (err) {
     console.error("Error initializing tables:", err.message);
   }
@@ -70,12 +63,9 @@ const PORT = process.env.PORT || 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
-
-
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
@@ -89,7 +79,6 @@ app.post('/api/signup', async (req, res) => {
     if (result.rows.length > 0) {
       return res.status(400).json({ message: 'Email already exists' });
     }
-
     await pool.query(
       'INSERT INTO users (firstname, email, password) VALUES ($1, $2, $3)',
       [firstname, email, password]
@@ -99,7 +88,6 @@ app.post('/api/signup', async (req, res) => {
     res.status(500).json({ message: 'Error creating account', error: err.message });
   }
 });
-
 
 app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
@@ -122,6 +110,29 @@ app.post('/api/login', async (req, res) => {
 app.use('/api', orderRoutes);
 
 
+
+
+app.get('/api/users', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM users ORDER BY id DESC');
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch users", error: err.message });
+  }
+});
+
+
+app.get('/api/orders', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM orders ORDER BY order_date DESC');
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch orders", error: err.message });
+  }
+});
+
+
+
 app.post('/api/reviews-image', async (req, res) => {
   const { image } = req.body;
   if (!image) return res.status(400).json({ message: "Image required" });
@@ -139,13 +150,11 @@ app.post('/api/reviews-image', async (req, res) => {
     fs.writeFileSync(filePath, base64Data, 'base64');
 
     await pool.query("INSERT INTO review_images (path) VALUES ($1)", [`images/reviews/${filename}`]);
-
     res.status(201).json({ message: "Image saved", path: filename });
   } catch (err) {
     res.status(500).json({ message: "Error saving image", error: err.message });
   }
 });
-
 
 app.get('/api/review-images', async (req, res) => {
   try {
@@ -156,6 +165,7 @@ app.get('/api/review-images', async (req, res) => {
     res.status(500).json({ message: "Error retrieving images", error: err.message });
   }
 });
+
 
 
 app.get('/api/ingredients', async (req, res) => {
@@ -174,15 +184,37 @@ app.post('/api/ingredients', async (req, res) => {
 
   try {
     await pool.query(
-      "INSERT INTO ingredients (name, quantity, unit) VALUES ($1, $2, $3)",
+      `INSERT INTO ingredients (name, quantity, unit)
+       VALUES ($1, $2, $3)
+       ON CONFLICT (name)
+       DO UPDATE SET quantity = EXCLUDED.quantity, unit = EXCLUDED.unit, updated_at = CURRENT_TIMESTAMP`,
       [name, quantity, unit]
     );
-    res.status(201).json({ message: "Ingredient added" });
+    res.status(201).json({ message: "Ingredient added or updated" });
   } catch (err) {
-    res.status(500).json({ message: "Failed to add ingredient", error: err.message });
+    res.status(500).json({ message: "Failed to add/update ingredient", error: err.message });
   }
 });
 
+
+app.post('/api/ingredients/update', async (req, res) => {
+  const { name, change } = req.body;
+  if (!name || change === undefined) {
+    return res.status(400).json({ message: "Name and change value required" });
+  }
+
+  try {
+    await pool.query(
+      `UPDATE ingredients
+       SET quantity = quantity + $1, updated_at = CURRENT_TIMESTAMP
+       WHERE name = $2`,
+      [change, name]
+    );
+    res.status(200).json({ message: "Ingredient quantity updated" });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to update ingredient", error: err.message });
+  }
+});
 
 app.put('/api/ingredients/:id', async (req, res) => {
   const { id } = req.params;
@@ -199,7 +231,6 @@ app.put('/api/ingredients/:id', async (req, res) => {
   }
 });
 
-
 app.delete('/api/ingredients/:id', async (req, res) => {
   const { id } = req.params;
   try {
@@ -210,6 +241,39 @@ app.delete('/api/ingredients/:id', async (req, res) => {
   }
 });
 
+
+
+
+
+
+//delete these later
+
+app.delete('/api/dev/clear-ingredients', async (req, res) => {
+  try {
+    await pool.query('DELETE FROM ingredients');
+    res.json({ message: "All ingredients deleted" });
+  } catch (err) {
+    res.status(500).json({ message: "Error deleting ingredients", error: err.message });
+  }
+});
+app.delete('/api/dev/clear-reviews', async (req, res) => {
+  try {
+    // Delete database entries
+    await pool.query('DELETE FROM review_images');
+
+    // Optionally also delete image files
+    const reviewFolder = path.join(__dirname, 'public/images/reviews');
+    if (fs.existsSync(reviewFolder)) {
+      fs.readdirSync(reviewFolder).forEach(file => {
+        fs.unlinkSync(path.join(reviewFolder, file));
+      });
+    }
+
+    res.json({ message: "All review images and records deleted" });
+  } catch (err) {
+    res.status(500).json({ message: "Error deleting reviews", error: err.message });
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
