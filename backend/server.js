@@ -242,39 +242,6 @@ app.delete('/api/ingredients/:id', async (req, res) => {
 });
 
 
-
-
-
-
-//delete these later
-
-app.delete('/api/dev/clear-ingredients', async (req, res) => {
-  try {
-    await pool.query('DELETE FROM ingredients');
-    res.json({ message: "All ingredients deleted" });
-  } catch (err) {
-    res.status(500).json({ message: "Error deleting ingredients", error: err.message });
-  }
-});
-app.delete('/api/dev/clear-reviews', async (req, res) => {
-  try {
-    // Delete database entries
-    await pool.query('DELETE FROM review_images');
-
-    // Optionally also delete image files
-    const reviewFolder = path.join(__dirname, 'public/images/reviews');
-    if (fs.existsSync(reviewFolder)) {
-      fs.readdirSync(reviewFolder).forEach(file => {
-        fs.unlinkSync(path.join(reviewFolder, file));
-      });
-    }
-
-    res.json({ message: "All review images and records deleted" });
-  } catch (err) {
-    res.status(500).json({ message: "Error deleting reviews", error: err.message });
-  }
-});
-
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
