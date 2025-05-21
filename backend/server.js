@@ -241,35 +241,6 @@ app.delete('/api/ingredients/:id', async (req, res) => {
   }
 });
 
-//delete later
-app.delete('/api/dev/clean-review-db', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT id, path FROM review_images');
-
-    const toDelete = [];
-
-    for (const row of result.rows) {
-      if (!row.path) continue; // skip if path is null or undefined
-
-      const filename = row.path.split('/').pop(); // extract just the file name
-      const localPath = path.join(__dirname, 'public', 'uploads', filename); // adjust path if needed
-
-      if (!fs.existsSync(localPath)) {
-        toDelete.push(row.id);
-      }
-    }
-
-    for (const id of toDelete) {
-      await pool.query('DELETE FROM review_images WHERE id = $1', [id]);
-    }
-
-    res.json({ message: `Deleted ${toDelete.length} missing image entries.` });
-  } catch (err) {
-    console.error("Cleanup failed:", err);
-    res.status(500).json({ error: "Cleanup error", details: err.message });
-  }
-});
-
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
